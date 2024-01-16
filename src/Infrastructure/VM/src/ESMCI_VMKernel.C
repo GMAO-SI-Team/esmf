@@ -784,6 +784,12 @@ void VMK::finalize(int finalizeMpi){
   delete [] cid;
   delete [] ssiLocalPetList;
   delete [] ssiLocalDevList;
+  // We need to now free the custom MPI data types in the
+  // vector<customType> customType
+  // in reverse order of their creation
+  for (auto i=(signed)customType.size()-1; i>=0; i--){
+     MPI_Type_free(&(customType[i]));
+  }
 #ifdef ESMF_NVML
   // Have access to NVIDIA management library (NVML)
   nvmlShutdown();  // shut down NVML
@@ -797,12 +803,6 @@ void VMK::finalize(int finalizeMpi){
     MPI_Comm_free(&mpi_c_ssi);
 #endif
     if (finalizeMpi)
-      // We need to now free the custom MPI data types in the
-      // vector<customType> customType
-      // in reverse order of their creation
-      for (auto i=(signed)customType.size()-1; i>=0; i--){
-         MPI_Type_free(&(customType[i]));
-      }
       MPI_Finalize();
   }
 }
