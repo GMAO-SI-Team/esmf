@@ -784,6 +784,9 @@ void VMK::finalize(int finalizeMpi){
   delete [] cid;
   delete [] ssiLocalPetList;
   delete [] ssiLocalDevList;
+  for (auto i=0; i<(signed)customType.size(); i++){
+    MPI_Type_free(&(customType[i]));
+  }
 #ifdef ESMF_NVML
   // Have access to NVIDIA management library (NVML)
   nvmlShutdown();  // shut down NVML
